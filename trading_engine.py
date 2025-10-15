@@ -53,7 +53,7 @@ class TradingEngine:
             # Use earliest available price if less than 7 days of data
             week_ago_price = prices.iloc[0]
         
-        if week_ago_price == 0 or np.isnan(week_ago_price) or np.isnan(current_price):
+        if np.isnan(week_ago_price) or np.isnan(current_price) or abs(week_ago_price) < 1e-10:
             return None
         
         # Calculate percentage change
@@ -104,7 +104,7 @@ class TradingEngine:
             
             if signal != 'HOLD':
                 current_price = prices.iloc[-1] if len(prices) > 0 else None
-                shares = amount / current_price if current_price and current_price > 0 else 0
+                shares = amount / current_price if current_price and abs(current_price) > 1e-10 else 0
                 
                 trades[symbol] = {
                     'signal': signal,
