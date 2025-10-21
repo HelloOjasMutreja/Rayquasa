@@ -28,6 +28,32 @@ Required packages:
 - numpy >= 1.23.0
 - yfinance >= 0.2.0
 
+## Backtesting
+
+Simulate the algorithm on historical data to see how it would have performed:
+
+```bash
+# Run backtest demo with sample data (no internet required)
+python demo_backtest.py
+
+# Backtest with real market data over 52 weeks
+python backtest.py
+
+# Backtest specific stocks over 26 weeks
+python backtest.py --universe tech --weeks 26
+
+# Backtest custom stocks with custom initial cash
+python backtest.py --custom AAPL MSFT GOOGL --cash 20000
+```
+
+The backtest will:
+- Simulate trading week-by-week over the specified period
+- Track all trades and portfolio value
+- Calculate returns and risk metrics
+- Generate visualization charts saved as `backtest_results.png`
+
+See [BACKTEST_GUIDE.md](BACKTEST_GUIDE.md) for detailed documentation.
+
 ## Testing the Algorithm
 
 ### Test with Live Market Data
@@ -147,10 +173,14 @@ Rayquasa/
 ├── stock_trading_algorithm.py   # Main algorithm implementation
 ├── trading_engine.py             # Trading logic and signal generation
 ├── stock_selector.py             # Stock filtering and selection
-├── test_with_live_data.py        # Live data testing script (NEW!)
+├── backtest.py                   # Backtesting script for historical simulation
+├── demo_backtest.py              # Backtest demo with sample data
+├── test_with_live_data.py        # Live data testing script
 ├── example_usage.py              # Example with sample data
 ├── test_trading_algorithm.py     # Unit tests
+├── test_backtest.py              # Backtest unit tests
 ├── requirements.txt              # Python dependencies
+├── BACKTEST_GUIDE.md             # Backtesting documentation
 └── README.md                     # This file
 ```
 
