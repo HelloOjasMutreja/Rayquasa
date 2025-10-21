@@ -1,0 +1,99 @@
+{% extends 'algorithms/base.html' %}
+
+{% block title %}Home - Trading Algorithm Platform{% endblock %}
+
+{% block content %}
+<h2>Welcome to the Trading Algorithm Platform</h2>
+
+<p>This platform allows you to create custom trading algorithms, test them on historical data, and visualize the results.</p>
+
+<div style="margin-top: 2rem;">
+    <h3>🚀 Quick Start</h3>
+    <ol style="line-height: 2;">
+        <li><a href="{% url 'algorithm-create' %}">Create a new algorithm</a> or use one of the existing algorithms below</li>
+        <li>Run a backtest with historical stock data</li>
+        <li>Analyze the results and visualizations</li>
+        <li>Refine your algorithm parameters and test again</li>
+    </ol>
+</div>
+
+<div style="margin-top: 2rem;">
+    <h3>📊 Recent Algorithms</h3>
+    {% if algorithms %}
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Buy Threshold</th>
+                <th>Sell Threshold</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for algorithm in algorithms %}
+            <tr>
+                <td><a href="{% url 'algorithm-detail' algorithm.pk %}">{{ algorithm.name }}</a></td>
+                <td>{{ algorithm.buy_threshold|floatformat:2 }}%</td>
+                <td>{{ algorithm.sell_threshold|floatformat:2 }}%</td>
+                <td>{{ algorithm.created_at|date:"Y-m-d" }}</td>
+                <td>
+                    <a href="{% url 'backtest-create' algorithm.pk %}" class="btn btn-success">Run Backtest</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 1rem;"><a href="{% url 'algorithm-list' %}">View all algorithms →</a></p>
+    {% else %}
+    <p>No algorithms yet. <a href="{% url 'algorithm-create' %}">Create your first algorithm!</a></p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <h3>📈 Recent Backtests</h3>
+    {% if recent_backtests %}
+    <table>
+        <thead>
+            <tr>
+                <th>Algorithm</th>
+                <th>Stocks</th>
+                <th>Return</th>
+                <th>Trades</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for backtest in recent_backtests %}
+            <tr>
+                <td><a href="{% url 'algorithm-detail' backtest.algorithm.pk %}">{{ backtest.algorithm.name }}</a></td>
+                <td>{{ backtest.symbols|truncatewords:3 }}</td>
+                <td>
+                    {% if backtest.total_return_pct %}
+                        <span style="color: {% if backtest.total_return_pct >= 0 %}green{% else %}red{% endif %}">
+                            {{ backtest.total_return_pct|floatformat:2 }}%
+                        </span>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ backtest.total_trades|default:"N/A" }}</td>
+                <td>{{ backtest.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'backtest-detail' backtest.pk %}" class="btn">View Results</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 1rem;"><a href="{% url 'backtest-list' %}">View all backtests →</a></p>
+    {% else %}
+    <p>No backtests yet. Run your first backtest!</p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem; background-color: #fff3cd; padding: 1rem; border-radius: 4px;">
+    <strong>⚠️ Disclaimer:</strong> This platform is for educational purposes only. Do not use it for actual trading without thorough testing and understanding of the risks involved.
+</div>
+{% endblock %}

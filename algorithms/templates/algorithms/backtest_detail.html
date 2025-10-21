@@ -1,0 +1,124 @@
+{% extends 'algorithms/base.html' %}
+
+{% block title %}Backtest Results - Trading Algorithm Platform{% endblock %}
+
+{% block content %}
+<h2>Backtest Results</h2>
+
+<div class="card">
+    <h3>Configuration</h3>
+    <table>
+        <tr>
+            <th>Algorithm</th>
+            <td><a href="{% url 'algorithm-detail' backtest.algorithm.pk %}">{{ backtest.algorithm.name }}</a></td>
+        </tr>
+        <tr>
+            <th>Stock Symbols</th>
+            <td>{{ backtest.symbols }}</td>
+        </tr>
+        <tr>
+            <th>Test Period</th>
+            <td>{{ backtest.weeks }} weeks</td>
+        </tr>
+        <tr>
+            <th>Initial Cash</th>
+            <td>${{ backtest.initial_cash|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <th>Run Date</th>
+            <td>{{ backtest.created_at|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Performance Summary</h3>
+    <table>
+        <tr>
+            <th>Final Portfolio Value</th>
+            <td style="font-size: 1.25rem; font-weight: bold;">
+                ${{ backtest.final_value|floatformat:2 }}
+            </td>
+        </tr>
+        <tr>
+            <th>Total Return</th>
+            <td style="font-size: 1.25rem; font-weight: bold; color: {% if backtest.total_return_pct >= 0 %}green{% else %}red{% endif %}">
+                {{ backtest.total_return_pct|floatformat:2 }}%
+            </td>
+        </tr>
+        <tr>
+            <th>Max Drawdown</th>
+            <td>{{ backtest.max_drawdown_pct|floatformat:2 }}%</td>
+        </tr>
+        <tr>
+            <th>Total Trades</th>
+            <td>{{ backtest.total_trades }}</td>
+        </tr>
+        <tr>
+            <th>Buy Trades</th>
+            <td style="color: green;">{{ backtest.buy_trades }}</td>
+        </tr>
+        <tr>
+            <th>Sell Trades</th>
+            <td style="color: red;">{{ backtest.sell_trades }}</td>
+        </tr>
+    </table>
+</div>
+
+{% if chart_url %}
+<div class="card">
+    <h3>Visualization</h3>
+    <img src="{{ chart_url }}" alt="Backtest Results Chart" style="width: 100%; max-width: 100%; height: auto;">
+</div>
+{% endif %}
+
+{% if trade_log %}
+<div class="card">
+    <h3>Recent Trades (Last 20)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Symbol</th>
+                <th>Action</th>
+                <th>Shares</th>
+                <th>Price</th>
+                <th>Amount</th>
+                <th>Weekly Change</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in trade_log %}
+            <tr>
+                <td>{{ trade.date|slice:":10" }}</td>
+                <td><strong>{{ trade.symbol }}</strong></td>
+                <td>
+                    <span style="color: {% if trade.action == 'BUY' %}green{% else %}red{% endif %}">
+                        {{ trade.action }}
+                    </span>
+                </td>
+                <td>{{ trade.shares|floatformat:4 }}</td>
+                <td>${{ trade.price|floatformat:2 }}</td>
+                <td>${{ trade.amount|floatformat:2 }}</td>
+                <td>
+                    {% if trade.weekly_change %}
+                        <span style="color: {% if trade.weekly_change >= 0 %}green{% else %}red{% endif %}">
+                            {{ trade.weekly_change|floatformat:2 }}%
+                        </span>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<div style="margin-top: 1rem;">
+    <a href="{% url 'algorithm-detail' backtest.algorithm.pk %}" class="btn btn-secondary">← Back to Algorithm</a>
+    <a href="{% url 'backtest-create' backtest.algorithm.pk %}" class="btn btn-success">Run Another Backtest</a>
+    <a href="{% url 'backtest-list' %}" class="btn">All Backtests</a>
+</div>
+{% endblock %}

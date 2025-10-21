@@ -1,0 +1,113 @@
+{% extends 'algorithms/base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}Create{% endif %} Algorithm - Trading Algorithm Platform{% endblock %}
+
+{% block content %}
+<h2>{% if object %}Edit{% else %}Create{% endif %} Trading Algorithm</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="card">
+        <h3>Basic Information</h3>
+        
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Name *</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div style="color: red; font-size: 0.875rem;">{{ form.name.errors }}</div>
+            {% endif %}
+            <div class="help-text">{{ form.name.help_text }}</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div style="color: red; font-size: 0.875rem;">{{ form.description.errors }}</div>
+            {% endif %}
+            <div class="help-text">{{ form.description.help_text }}</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>Trading Parameters</h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="{{ form.buy_threshold.id_for_label }}">Buy Threshold *</label>
+                {{ form.buy_threshold }}
+                {% if form.buy_threshold.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.buy_threshold.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.buy_threshold.help_text }}</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.sell_threshold.id_for_label }}">Sell Threshold *</label>
+                {{ form.sell_threshold }}
+                {% if form.sell_threshold.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.sell_threshold.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.sell_threshold.help_text }}</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.buy_amount.id_for_label }}">Buy Amount ($) *</label>
+                {{ form.buy_amount }}
+                {% if form.buy_amount.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.buy_amount.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.buy_amount.help_text }}</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.sell_amount.id_for_label }}">Sell Amount ($) *</label>
+                {{ form.sell_amount }}
+                {% if form.sell_amount.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.sell_amount.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.sell_amount.help_text }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>Stock Selection Parameters</h3>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="{{ form.min_volatility.id_for_label }}">Min Volatility *</label>
+                {{ form.min_volatility }}
+                {% if form.min_volatility.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.min_volatility.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.min_volatility.help_text }}</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.max_volatility.id_for_label }}">Max Volatility *</label>
+                {{ form.max_volatility }}
+                {% if form.max_volatility.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.max_volatility.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.max_volatility.help_text }}</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.min_data_points.id_for_label }}">Min Data Points *</label>
+                {{ form.min_data_points }}
+                {% if form.min_data_points.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.min_data_points.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.min_data_points.help_text }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 1rem;">
+        <button type="submit" class="btn btn-success">{% if object %}Update{% else %}Create{% endif %} Algorithm</button>
+        <a href="{% url 'algorithm-list' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}
