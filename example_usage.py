@@ -189,11 +189,19 @@ def example_with_live_data():
 
 
 if __name__ == '__main__':
-    # Run example with sample data
-    example_with_sample_data()
+    import sys
     
-    print("\n" + "=" * 60)
-    print()
-    
-    # Uncomment the following line to run with live data
-    # example_with_live_data()
+    # Check command line arguments
+    if len(sys.argv) > 1 and sys.argv[1] == '--live':
+        # Run with live data
+        example_with_live_data()
+    else:
+        # Run example with sample data
+        example_with_sample_data()
+        
+        print("\n" + "=" * 60)
+        print("TIP: To test with live market data, run:")
+        print("  python example_usage.py --live")
+        print("  OR use: python test_with_live_data.py")
+        print("=" * 60)
+        print()
