@@ -223,6 +223,31 @@ Rayquasa/
 └── BACKTEST.md                   # Backtesting documentation
 ```
 
+## Django Web Application
+
+A new Django-based web platform for creating, testing, and visualizing custom trading algorithms!
+
+### Quick Start
+
+```bash
+# Run database migrations
+python manage.py migrate
+
+# Create sample algorithms
+python manage.py create_sample_algorithms
+
+# Start the web server
+python manage.py runserver
+```
+
+Then open http://localhost:8000/ in your browser to:
+- Create custom trading algorithms with your own parameters
+- Run backtests on historical data
+- View detailed performance metrics and visualizations
+- Compare different algorithm strategies
+
+For detailed documentation, see [DJANGO_README.md](DJANGO_README.md).
+
 ## Testing
 
 ```bash
