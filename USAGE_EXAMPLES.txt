@@ -1,0 +1,179 @@
+========================================================================
+                    RAYQUASA USAGE EXAMPLES
+========================================================================
+
+The Rayquasa stock trading algorithm now has comprehensive yfinance 
+integration and pandas support. Here are quick examples to get started:
+
+------------------------------------------------------------------------
+1. BASIC TESTING (No Internet Required)
+------------------------------------------------------------------------
+
+Command:
+    python example_usage.py
+
+What it does:
+    - Tests with generated sample data
+    - Shows complete algorithm flow
+    - No network access needed
+
+------------------------------------------------------------------------
+2. TEST WITH LIVE DATA (Default Stocks)
+------------------------------------------------------------------------
+
+Command:
+    python test_with_live_data.py
+
+Stocks tested:
+    AAPL, GOOGL, MSFT, AMZN, TSLA, META, NVDA, JPM
+
+What it shows:
+    ✓ Real-time stock data
+    ✓ Trading signals (BUY/SELL)
+    ✓ Detailed analysis
+    ✓ Portfolio summary
+
+------------------------------------------------------------------------
+3. TEST SPECIFIC SECTORS
+------------------------------------------------------------------------
+
+Tech Stocks:
+    python test_with_live_data.py --universe tech
+    (Tests 10 technology companies)
+
+Finance Stocks:
+    python test_with_live_data.py --universe finance
+    (Tests 10 financial institutions)
+
+Healthcare:
+    python test_with_live_data.py --universe healthcare
+    (Tests 10 healthcare companies)
+
+Energy:
+    python test_with_live_data.py --universe energy
+    (Tests 10 energy companies)
+
+Consumer:
+    python test_with_live_data.py --universe consumer
+    (Tests 10 consumer goods companies)
+
+------------------------------------------------------------------------
+4. TEST YOUR OWN STOCKS
+------------------------------------------------------------------------
+
+Command:
+    python test_with_live_data.py --custom AAPL TSLA NVDA AMD
+
+Replace with any valid stock symbols you want to test.
+
+------------------------------------------------------------------------
+5. USE DIFFERENT TIME PERIODS
+------------------------------------------------------------------------
+
+1 month (default):
+    python test_with_live_data.py --period 1mo
+
+3 months:
+    python test_with_live_data.py --period 3mo
+
+6 months:
+    python test_with_live_data.py --period 6mo
+
+1 year:
+    python test_with_live_data.py --period 1y
+
+------------------------------------------------------------------------
+6. LIST ALL OPTIONS
+------------------------------------------------------------------------
+
+See all stock universes:
+    python test_with_live_data.py --list-universes
+
+See all command options:
+    python test_with_live_data.py --help
+
+------------------------------------------------------------------------
+7. COMBINE OPTIONS
+------------------------------------------------------------------------
+
+Finance stocks with 3 months data:
+    python test_with_live_data.py --universe finance --period 3mo
+
+Custom stocks with 1 year data:
+    python test_with_live_data.py --custom AAPL MSFT --period 1y
+
+------------------------------------------------------------------------
+8. USE IN YOUR OWN PYTHON CODE
+------------------------------------------------------------------------
+
+from stock_trading_algorithm import StockTradingAlgorithm, fetch_live_data
+
+# Fetch live data
+symbols = ['AAPL', 'MSFT', 'GOOGL']
+stock_data = fetch_live_data(symbols, period='1mo')
+
+# Run algorithm
+algorithm = StockTradingAlgorithm()
+results = algorithm.run(stock_data)
+
+# Access results
+print(f"Suitable stocks: {results['suitable_stocks']}")
+print(f"Trade signals: {results['trades']}")
+print(f"Summary: {results['summary']}")
+
+# Analyze individual stock
+analysis = algorithm.analyze_stock('AAPL', stock_data['AAPL'])
+print(f"Predictability: {analysis['predictability_score']}")
+print(f"Signal: {analysis['signal']}")
+
+------------------------------------------------------------------------
+9. CUSTOM ALGORITHM CONFIGURATION
+------------------------------------------------------------------------
+
+from stock_trading_algorithm import StockTradingAlgorithm
+
+# Configure thresholds
+selector_config = {
+    'min_volatility': 0.02,
+    'max_volatility': 0.3,
+    'min_data_points': 30
+}
+
+trading_config = {
+    'buy_threshold': -0.03,      # Buy at 3% drop
+    'sell_threshold': 0.08,      # Sell at 8% rise
+    'buy_amount': 10.0,          # Buy $10 worth
+    'sell_amount': 20.0          # Sell $20 worth
+}
+
+algorithm = StockTradingAlgorithm(
+    selector_config=selector_config,
+    trading_config=trading_config
+)
+
+------------------------------------------------------------------------
+10. RUN ALL TESTS
+------------------------------------------------------------------------
+
+Run unit tests:
+    python test_trading_algorithm.py
+
+Run integration tests:
+    python test_integration.py
+
+Run both:
+    python test_trading_algorithm.py && python test_integration.py
+
+Expected: All 26 tests should pass
+
+========================================================================
+                        QUICK TIPS
+========================================================================
+
+✓ Start with sample data to understand the output format
+✓ Use '--universe small' for quick live data tests
+✓ Test different sectors to see varied market conditions
+✓ Longer time periods provide more data for analysis
+✓ Check README.md and QUICKSTART.md for more details
+
+========================================================================
