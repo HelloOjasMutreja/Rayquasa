@@ -1,0 +1,76 @@
+{% extends 'algorithms/base.html' %}
+
+{% block title %}Run Backtest - Trading Algorithm Platform{% endblock %}
+
+{% block content %}
+<h2>Run Backtest: {{ algorithm.name }}</h2>
+
+<div class="card">
+    <h3>Algorithm Configuration</h3>
+    <p><strong>Buy Threshold:</strong> {{ algorithm.buy_threshold|floatformat:2 }}</p>
+    <p><strong>Sell Threshold:</strong> {{ algorithm.sell_threshold|floatformat:2 }}</p>
+    <p><strong>Buy Amount:</strong> ${{ algorithm.buy_amount|floatformat:2 }}</p>
+    <p><strong>Sell Amount:</strong> ${{ algorithm.sell_amount|floatformat:2 }}</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="card">
+        <h3>Backtest Parameters</h3>
+        
+        <div class="form-group">
+            <label for="{{ form.universe.id_for_label }}">Stock Universe</label>
+            {{ form.universe }}
+            {% if form.universe.errors %}
+                <div style="color: red; font-size: 0.875rem;">{{ form.universe.errors }}</div>
+            {% endif %}
+            <div class="help-text">{{ form.universe.help_text }}</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.symbols.id_for_label }}">Custom Stock Symbols</label>
+            {{ form.symbols }}
+            {% if form.symbols.errors %}
+                <div style="color: red; font-size: 0.875rem;">{{ form.symbols.errors }}</div>
+            {% endif %}
+            <div class="help-text">{{ form.symbols.help_text }}</div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label for="{{ form.weeks.id_for_label }}">Number of Weeks</label>
+                {{ form.weeks }}
+                {% if form.weeks.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.weeks.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.weeks.help_text }}</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.initial_cash.id_for_label }}">Initial Cash ($)</label>
+                {{ form.initial_cash }}
+                {% if form.initial_cash.errors %}
+                    <div style="color: red; font-size: 0.875rem;">{{ form.initial_cash.errors }}</div>
+                {% endif %}
+                <div class="help-text">{{ form.initial_cash.help_text }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if form.non_field_errors %}
+    <div style="color: red; margin-bottom: 1rem;">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    
+    <div style="margin-top: 1rem;">
+        <button type="submit" class="btn btn-success">Run Backtest</button>
+        <a href="{% url 'algorithm-detail' algorithm.pk %}" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+<div style="margin-top: 2rem; background-color: #d1ecf1; padding: 1rem; border-radius: 4px;">
+    <strong>ℹ️ Note:</strong> The backtest will fetch historical data from Yahoo Finance and simulate trading over the specified period. This may take a minute or two depending on the number of stocks and weeks.
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'algorithms/base.html' %}
+
+{% block title %}Algorithms - Trading Algorithm Platform{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2>Trading Algorithms</h2>
+    <a href="{% url 'algorithm-create' %}" class="btn btn-success">+ Create New Algorithm</a>
+</div>
+
+{% if algorithms %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Buy Threshold</th>
+            <th>Sell Threshold</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for algorithm in algorithms %}
+        <tr>
+            <td><strong><a href="{% url 'algorithm-detail' algorithm.pk %}">{{ algorithm.name }}</a></strong></td>
+            <td>{{ algorithm.description|truncatewords:10 }}</td>
+            <td>{{ algorithm.buy_threshold|floatformat:2 }}</td>
+            <td>{{ algorithm.sell_threshold|floatformat:2 }}</td>
+            <td>{{ algorithm.created_at|date:"Y-m-d" }}</td>
+            <td>
+                <a href="{% url 'algorithm-detail' algorithm.pk %}" class="btn">View</a>
+                <a href="{% url 'algorithm-update' algorithm.pk %}" class="btn btn-secondary">Edit</a>
+                <a href="{% url 'backtest-create' algorithm.pk %}" class="btn btn-success">Backtest</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div style="margin-top: 1rem;">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% endif %}
+
+{% else %}
+<div class="card">
+    <p>No algorithms found. <a href="{% url 'algorithm-create' %}">Create your first algorithm!</a></p>
+</div>
+{% endif %}
+{% endblock %}

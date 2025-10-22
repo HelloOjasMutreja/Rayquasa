@@ -1,0 +1,108 @@
+{% extends 'algorithms/base.html' %}
+
+{% block title %}{{ algorithm.name }} - Trading Algorithm Platform{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2>{{ algorithm.name }}</h2>
+    <div>
+        <a href="{% url 'algorithm-update' algorithm.pk %}" class="btn btn-secondary">Edit Algorithm</a>
+        <a href="{% url 'backtest-create' algorithm.pk %}" class="btn btn-success">Run Backtest</a>
+    </div>
+</div>
+
+{% if algorithm.description %}
+<div class="card">
+    <p>{{ algorithm.description }}</p>
+</div>
+{% endif %}
+
+<div class="card">
+    <h3>Trading Parameters</h3>
+    <table>
+        <tr>
+            <th>Buy Threshold</th>
+            <td>{{ algorithm.buy_threshold|floatformat:2 }} ({{ algorithm.buy_threshold|floatformat:0|add:"0" }}% drop triggers buy)</td>
+        </tr>
+        <tr>
+            <th>Sell Threshold</th>
+            <td>{{ algorithm.sell_threshold|floatformat:2 }} ({{ algorithm.sell_threshold|floatformat:0|add:"0" }}% rise triggers sell)</td>
+        </tr>
+        <tr>
+            <th>Buy Amount</th>
+            <td>${{ algorithm.buy_amount|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <th>Sell Amount</th>
+            <td>${{ algorithm.sell_amount|floatformat:2 }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Stock Selection Parameters</h3>
+    <table>
+        <tr>
+            <th>Min Volatility</th>
+            <td>{{ algorithm.min_volatility|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <th>Max Volatility</th>
+            <td>{{ algorithm.max_volatility|floatformat:2 }}</td>
+        </tr>
+        <tr>
+            <th>Min Data Points</th>
+            <td>{{ algorithm.min_data_points }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Recent Backtests</h3>
+    {% if recent_backtests %}
+    <table>
+        <thead>
+            <tr>
+                <th>Stocks</th>
+                <th>Weeks</th>
+                <th>Initial Cash</th>
+                <th>Return</th>
+                <th>Trades</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for backtest in recent_backtests %}
+            <tr>
+                <td>{{ backtest.symbols|truncatewords:3 }}</td>
+                <td>{{ backtest.weeks }}</td>
+                <td>${{ backtest.initial_cash|floatformat:0 }}</td>
+                <td>
+                    {% if backtest.total_return_pct %}
+                        <span style="color: {% if backtest.total_return_pct >= 0 %}green{% else %}red{% endif %}">
+                            {{ backtest.total_return_pct|floatformat:2 }}%
+                        </span>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ backtest.total_trades|default:"N/A" }}</td>
+                <td>{{ backtest.created_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'backtest-detail' backtest.pk %}" class="btn">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p style="margin-top: 1rem;"><a href="{% url 'backtest-list' %}?algorithm={{ algorithm.pk }}">View all backtests for this algorithm →</a></p>
+    {% else %}
+    <p>No backtests yet. <a href="{% url 'backtest-create' algorithm.pk %}">Run your first backtest!</a></p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 1rem;">
+    <a href="{% url 'algorithm-list' %}" class="btn btn-secondary">← Back to Algorithms</a>
+</div>
+{% endblock %}
